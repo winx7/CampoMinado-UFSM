@@ -15,6 +15,7 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_native_dialog.h>
 
+
 int ScrW = 512, ScrH = 512;
 
 ALLEGRO_DISPLAY * scr;
@@ -65,6 +66,8 @@ bool difMBuLogic(ALLEGRO_EVENT);
 bool createMineField(int, int, int);
 
 void drawGame();
+void gameMAxLogic(ALLEGRO_EVENT);
+bool gameMBuLogic(ALLEGRO_EVENT);
 
 void closeAll();
 
@@ -169,9 +172,6 @@ int main() {
   if (!setup("Campo Minado")) // se não conseguir inicializar o jogo, cancela tudo
     return -1;
 
-    for(i=-1;i<10;i++)
-        err(i);
-
     srand(time(NULL));
  //pra reduzir o numero de comparações no loop do jogo
   white = al_map_rgb(255, 255, 255);
@@ -242,7 +242,7 @@ void drawInitMenu() {
 
   al_draw_text(m_font, al_map_rgb(255 - (255*ra), 255 - (255*ga), 255 - (255*ba)), (ScrW / 2) - sin(drtime) * 280, 458, ALLEGRO_ALIGN_CENTER, "Desenvolvido por Juarez Corneli Filho, Andrey Avila, Gabriel Tanski e Gabriel Jaymes - Telecom 2018/1 UFSM");
 
-  al_draw_text(m_font, white, ScrW / 2, selY, ALLEGRO_ALIGN_CENTER, "x                            x");
+  al_draw_text(m_font, white, ScrW / 2, selY, ALLEGRO_ALIGN_CENTER, "#                            #");
   al_draw_rectangle(ScrW / 2 - 128, selY, ScrW / 2 + 128, selY + 36, white, 2);
 
   al_flip_display();
@@ -347,7 +347,7 @@ void drawDiffMenu() {
 }
 
 void difMAxLogic(ALLEGRO_EVENT ev) {
-  printf("%i %i, %i\n", ev.mouse.x, ev.mouse.y, hovering);
+
   if (ev.mouse.y <= 212 && ev.mouse.y >= 180) {
     if (!hovering) {
       al_stop_sample(bhI);
@@ -402,8 +402,8 @@ bool difMBuLogic(ALLEGRO_EVENT ev) {
         //return err(0);
 
     curDFunc = &drawGame;
-    //curMAxLFunc = NULL;
-    //curMBuLFunc = NULL;
+    curMAxLFunc = &gameMAxLogic;
+    curMBuLFunc = &gameMBuLogic;
     selY = 1024;
     hovering = false;
   } else if (ev.mouse.y <= 248 && ev.mouse.y >= 216) {
@@ -412,8 +412,8 @@ bool difMBuLogic(ALLEGRO_EVENT ev) {
         //return err(0);
 
     curDFunc = &drawGame;
-    //curMAxLFunc = NULL;
-    //curMBuLFunc = NULL;
+    curMAxLFunc = &gameMAxLogic;
+    curMBuLFunc = &gameMBuLogic;
     selY = 1024;
     hovering = false;
   } else if (ev.mouse.y <= 284 && ev.mouse.y >= 256) {
@@ -422,8 +422,9 @@ bool difMBuLogic(ALLEGRO_EVENT ev) {
         //return err(0);
 
     curDFunc = &drawGame;
-    //curMAxLFunc = NULL;
-    //curMBuLFunc = NULL;
+    curMAxLFunc = &gameMAxLogic;
+    curMBuLFunc = &gameMBuLogic;
+
     selY = 1024;
     hovering = false;
   } else if (ev.mouse.y <= 320 && ev.mouse.y >= 288) {
@@ -432,8 +433,8 @@ bool difMBuLogic(ALLEGRO_EVENT ev) {
         //return err(0);
 
     curDFunc = &drawGame;
-    //curMAxLFunc = NULL;
-    //curMBuLFunc = NULL;
+    curMAxLFunc = &gameMAxLogic;
+    curMBuLFunc = &gameMBuLogic;
     selY = 1024;
     hovering = false;
   } else if (ev.mouse.y <= 494 && ev.mouse.y >= 460) {
@@ -460,7 +461,6 @@ bool createMineField(int m, int n, int num){
 
     unsigned short int rX, rY;
 
-    printf("M %i N %i\n", m, n);
 
     for(i = 0; i<m; i++)
         for(j=0; j<n; j++)
@@ -474,7 +474,6 @@ bool createMineField(int m, int n, int num){
     {
             rX = rand()%m;
             rY = rand()%n;
-            printf("\n2");
 
             if(minefield.mines[rX][rY] == false)
                 minefield.mines[rX][rY] = true;
@@ -510,17 +509,17 @@ void drawGame() {
   {
     for(j = 0; j < minefield.n; j++){
 
-        //printf("\n AAA AAA %i", minefield.mines[i][j]);
-
         if(minefield.mines[i][j])
         {
-            al_draw_bitmap(sq, ScrW/2 - ((minefield.n/2) * 16) + (j*16) , ScrH/2 - ((minefield.m/2) * 16) + (i*16), NULL);
-            al_draw_filled_circle(ScrW/2 - ((minefield.n/2) * 16) + (j*16) + 8, ScrH/2 - ((minefield.m/2) * 16) + (i*16) + 8, 8, white);
+            al_draw_bitmap(sq, ScrW/2 - (minefield.n * 8) + (j*16) , ScrH/2 - (minefield.m * 8) + (i*16), NULL);
+            al_draw_filled_circle(ScrW/2 - (minefield.n * 8) + (j*16) + 8, ScrH/2 - (minefield.m * 8) + (i*16) + 8, 8, white);
         } else {
-            al_draw_bitmap(sq, ScrW/2 - ((minefield.n/2) * 16) + (j*16) , ScrH/2 - ((minefield.m/2) * 16) + (i*16), NULL);
+            al_draw_bitmap(sq, ScrW/2 - (minefield.n * 8) + (j*16) , ScrH/2 - (minefield.m * 8) + (i*16), NULL);
         }
     }
   }
+
+
   /*al_draw_text(m_font, white, ScrW / 2, 124, ALLEGRO_ALIGN_CENTER, "Escolha a dificuldade");
 
   al_draw_text(m_font, white, ScrW / 2, 178, ALLEGRO_ALIGN_CENTER, "Fácil");
@@ -538,8 +537,62 @@ void drawGame() {
 
 }
 
+void gameMAxLogic(ALLEGRO_EVENT ev) {
+
+    printf("Quad: %i x %i eq %i %i\n", ev.mouse.x - (ScrW/2) + (minefield.m*8), ev.mouse.y - (ScrH/2) + (minefield.n*8),
+           (ev.mouse.x - (ScrW/2) + (minefield.m*8))/16, (ev.mouse.y - (ScrH/2) + (minefield.n*8))/16);
+
+    ;
+
+}
+
+bool gameMBuLogic(ALLEGRO_EVENT ev) {
+
+  if(!hovering)
+    return true;
+  if (ev.mouse.y <= 272 && ev.mouse.y >= 240) {
+    al_play_sample(bclick, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
+    if(clickable)
+    {
+        curDFunc = &drawDiffMenu;
+        curMAxLFunc = &difMAxLogic;
+        curMBuLFunc = &difMBuLogic;
+        selY = 1024;
+        hovering = false;
+    }
+  } else if (ev.mouse.y <= 308 && ev.mouse.y >= 276) {
+    al_play_sample(bclick, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
+  } else if (ev.mouse.y <= 344 && ev.mouse.y >= 316) {
+    al_play_sample(bclick, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
+  } else if (ev.mouse.y <= 434 && ev.mouse.y >= 400) {
+    al_play_sample(back, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
+    return false;
+  } else {
+    hovering = false;
+    selY = 1024;
+    return true;
+  }
+}
+
 
 void closeAll() {
+    /*
+ALLEGRO_EVENT_QUEUE * eq;
+
+ALLEGRO_TIMER * timer;
+
+static ALLEGRO_COLOR white;
+//float animCoef;
+
+ALLEGRO_SAMPLE * bhover;
+ALLEGRO_SAMPLE * bclick;
+ALLEGRO_SAMPLE * back;
+ALLEGRO_SAMPLE * start;
+ALLEGRO_SAMPLE * quit;
+
+ALLEGRO_SAMPLE_ID * bhI;
+*/
+
 
     al_destroy_bitmap(bg_glow);
     al_destroy_bitmap(bframe);
