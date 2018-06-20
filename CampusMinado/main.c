@@ -13,6 +13,7 @@
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
+#include <allegro5/allegro_native_dialog.h>
 
 int ScrW = 512, ScrH = 512;
 
@@ -167,6 +168,9 @@ int main() {
 
   if (!setup("Campo Minado")) // se não conseguir inicializar o jogo, cancela tudo
     return -1;
+
+    for(i=-1;i<10;i++)
+        err(i);
 
     srand(time(NULL));
  //pra reduzir o numero de comparações no loop do jogo
@@ -536,89 +540,6 @@ void drawGame() {
 
 
 void closeAll() {
-    /*
-ALLEGRO_EVENT_QUEUE * eq;
-
-ALLEGRO_TIMER * timer;
-
-static ALLEGRO_COLOR white;
-//float animCoef;
-
-ALLEGRO_SAMPLE * bhover;
-ALLEGRO_SAMPLE * bclick;
-ALLEGRO_SAMPLE * back;
-ALLEGRO_SAMPLE * start;
-ALLEGRO_SAMPLE * quit;
-
-ALLEGRO_SAMPLE_ID * bhI;
-*/
-
-    /*  if (!al_init())
-    return err(0);
-
-  if (!al_init_image_addon())
-    return err(1);
-
-  if (!al_install_keyboard())
-    return err(2);
-
-  if (!al_install_mouse())
-    return err(3);
-
-  timer = al_create_timer(1 / 100);
-  if (!timer)
-    return err(4);
-
-  eq = al_create_event_queue();
-
-  if (!eq)
-    return err(5);
-
-  if (!al_init_primitives_addon())
-    return err(6);
-
-  if (!al_install_audio())
-    return err(7);
-
-  if (!al_init_acodec_addon())
-    return err(8);
-
-  if (!al_reserve_samples(8))
-    return err(9);
-
-  bhover = al_load_sample("sfx/buttonhover.wav");
-  bclick = al_load_sample("sfx/buttonclick.wav");
-  back = al_load_sample("sfx/back.wav");
-  start = al_load_sample("sfx/start.wav");
-  quit = al_load_sample("sfx/quit.wav");
-
-  bhI = al_create_sample_instance(bhover);
-
-  //al_register_event_source(eq, al_get_display_event_source(scr)); // tá dando crash
-
-  al_register_event_source(eq, al_get_timer_event_source(timer));
-
-  al_register_event_source(eq, al_get_mouse_event_source());
-
-  al_init_font_addon();
-
-  al_init_ttf_addon();
-
-  t_font = al_load_ttf_font("res/square-deal.ttf", 48, 0);
-  counter_f = al_load_ttf_font("res/square-deal.ttf", 24, 0);
-  m_font = al_load_ttf_font("res/alterebro-pixel-font.ttf", 36, 0);
-  i_font = al_load_ttf_font("res/alterebro-pixel-font.ttf", 24, 0);
-
-  scr = al_create_display(ScrW, ScrH);
-
-  al_set_window_title(scr, title);
-  //al_set_display_flag(scr, ALLEGRO_NOFRAME, true);
-
-  bg_glow = al_load_bitmap("gfx/bg_glow.png");
-  bframe = al_load_bitmap("gfx/glass.png");
-
-  al_flip_display();
-  al_start_timer(timer);*/
 
     al_destroy_bitmap(bg_glow);
     al_destroy_bitmap(bframe);
@@ -639,11 +560,124 @@ int err(unsigned char id) {
 
   switch (id) {
   case 0:
-    printf("erro 1");
+    al_show_native_message_box(
+     scr,
+     "Erro",
+     "",
+     "O programa não pôde inicializar o Allegro.",
+     NULL,
+     ALLEGRO_MESSAGEBOX_ERROR
+    );
+    break;
+
+    case 1:
+    al_show_native_message_box(
+     scr,
+     "Erro",
+     "",
+     "O programa não pôde inicializar o módulo de imagens.",
+     NULL,
+     ALLEGRO_MESSAGEBOX_ERROR
+    );
+    break;
+
+    case 2:
+    al_show_native_message_box(
+     scr,
+     "Erro",
+     "",
+     "O programa não pôde inicializar o módulo do teclado.",
+     NULL,
+     ALLEGRO_MESSAGEBOX_ERROR
+    );
+    break;
+
+    case 3:
+    al_show_native_message_box(
+     scr,
+     "Erro",
+     "",
+     "O programa não pôde inicializar o módulo do mouse.",
+     NULL,
+     ALLEGRO_MESSAGEBOX_ERROR
+    );
+    break;
+
+    case 4:
+    al_show_native_message_box(
+     scr,
+     "Erro",
+     "",
+     "O programa não pôde inicializar o módulo do cronômetro.",
+     NULL,
+     ALLEGRO_MESSAGEBOX_ERROR
+    );
+    break;
+
+    case 5:
+    al_show_native_message_box(
+     scr,
+     "Erro",
+     "",
+     "O programa não pôde inicializar o módulo da fila de eventos.",
+     NULL,
+     ALLEGRO_MESSAGEBOX_ERROR
+    );
+    break;
+
+    case 6:
+    al_show_native_message_box(
+     scr,
+     "Erro",
+     "",
+     "O programa não pôde inicializar o módulo de desenho de primitivas.",
+     NULL,
+     ALLEGRO_MESSAGEBOX_ERROR
+    );
+    break;
+
+    case 7:
+    al_show_native_message_box(
+     scr,
+     "Erro",
+     "",
+     "O programa não pôde inicializar o módulo de áudio.",
+     NULL,
+     ALLEGRO_MESSAGEBOX_ERROR
+    );
+    break;
+
+    case 8:
+    al_show_native_message_box(
+     scr,
+     "Erro",
+     "",
+     "O programa não pôde inicializar o módulo dos codecs.",
+     NULL,
+     ALLEGRO_MESSAGEBOX_ERROR
+    );
+    break;
+
+    case 9:
+    al_show_native_message_box(
+     scr,
+     "Erro",
+     "",
+     "O programa não pôde reservar amostras de áudio.",
+     NULL,
+     ALLEGRO_MESSAGEBOX_ERROR
+    );
     break;
 
   default:
-    printf("error");
+    al_show_native_message_box(
+     scr,
+     "Erro",
+     "",
+     "Erro indefinido.",
+     NULL,
+     ALLEGRO_MESSAGEBOX_ERROR
+    );
     break;
   }
 
