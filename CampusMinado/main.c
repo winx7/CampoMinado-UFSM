@@ -521,17 +521,9 @@ void drawGame() {
     }
 
 
-    /*al_draw_text(m_font, white, ScrW / 2, 124, ALLEGRO_ALIGN_CENTER, "Escolha a dificuldade");
-
-    al_draw_text(m_font, white, ScrW / 2, 178, ALLEGRO_ALIGN_CENTER, "Fácil");
-    al_draw_text(m_font, white, ScrW / 2, 214, ALLEGRO_ALIGN_CENTER, "Intermediário");
-    al_draw_text(m_font, white, ScrW / 2, 250, ALLEGRO_ALIGN_CENTER, "Difícil");
-    al_draw_text(m_font, white, ScrW / 2, 286, ALLEGRO_ALIGN_CENTER, "Zanetti vs Lian");
-
     al_draw_text(m_font, white, ScrW / 2, 458, ALLEGRO_ALIGN_CENTER, "Voltar");
-    //al_draw_text(m_font, white, (ScrW / 2) - cos(drtime) * 280, 458, ALLEGRO_ALIGN_CENTER, "Desenvolvido por Juarez Corneli Filho, Andrey Avila, Gabriel Tanski e Gabriel Jaymes - Telecom 2018/1 UFSM");
-      */
-    al_draw_text(m_font, white, ScrW / 2, selY, ALLEGRO_ALIGN_CENTER, "x                            x");
+
+    al_draw_text(m_font, white, ScrW / 2, selY, ALLEGRO_ALIGN_CENTER, "#                            #");
     al_draw_rectangle(ScrW / 2 - 128, selY, ScrW / 2 + 128, selY + 36, white, 2);
 
     al_flip_display();
@@ -543,7 +535,17 @@ void gameMAxLogic(ALLEGRO_EVENT ev) {
     printf("Quad: %i x %i eq %i %i\n", ev.mouse.x - (ScrW/2) + (minefield.n*8), ev.mouse.y - (ScrH/2) + (minefield.m*8),
            (ev.mouse.x - (ScrW/2) + (minefield.n*8))/16, (ev.mouse.y - (ScrH/2) + (minefield.m*8))/16);
 
-    ;
+    if (ev.mouse.y <= 494 && ev.mouse.y >= 460) {
+        if (!hovering) {
+            al_stop_sample(bhI);
+            hovering = true;
+            al_play_sample(bhover, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
+        }
+        selY = 458;
+    } else {
+        hovering = false;
+        selY = 1024;
+    }
 
 }
 
@@ -568,6 +570,15 @@ bool gameMBuLogic(ALLEGRO_EVENT ev) {
     } else if (ev.mouse.y <= 434 && ev.mouse.y >= 400) {
         al_play_sample(back, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
         return false;
+    } else if (ev.mouse.y <= 494 && ev.mouse.y >= 460) {
+        al_play_sample(back, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
+
+        curDFunc = &drawInitMenu;
+        curMAxLFunc = &initMAxLogic;
+        curMBuLFunc = &initMBuLogic;
+        selY = 1024;
+        hovering = false;
+
     } else {
         hovering = false;
         selY = 1024;
